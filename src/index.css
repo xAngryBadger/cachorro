@@ -1,0 +1,181 @@
+/* ============================================
+   BARBEARIA — Cachorro
+   Personalidade: Luxo-artesanal, masculino, quente
+   Fonts: Outfit + Fraunces + JetBrains Mono
+   Easing: --ease-circ-out = cubic-bezier(0, 0, 0.2, 1)
+   ============================================ */
+
+/* 1. @fontsource imports */
+@import "@fontsource/outfit/300.css";
+@import "@fontsource/outfit/400.css";
+@import "@fontsource/outfit/600.css";
+@import "@fontsource/outfit/700.css";
+@import "@fontsource/fraunces/700.css";
+@import "@fontsource/fraunces/700-italic.css";
+@import "@fontsource/jetbrains-mono/400.css";
+@import "@fontsource/jetbrains-mono/700.css";
+
+/* 2. :root tokens */
+:root {
+  --ease-circ-out: cubic-bezier(0, 0, 0.2, 1);
+  --ease-project: var(--ease-circ-out);
+
+  --font-sans: 'Outfit', sans-serif;
+  --font-serif: 'Fraunces', serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --text-h1: clamp(3rem, 5vw, 5.5rem);
+  --text-h2: clamp(2rem, 3.5vw, 3.5rem);
+  --text-h3: clamp(1.375rem, 2vw, 2rem);
+  --text-body: clamp(1.0625rem, 1.2vw, 1.1875rem);
+  --text-label: 0.75rem;
+  --text-eyebrow: 0.6875rem;
+
+  --color-bg: #1a1614;
+  --color-surface: #f4ede0;
+  --color-text: #f4ede0;
+  --color-text-on-dark: #1a1614;
+  --color-accent-gold: #c9a23f;
+  --color-accent-warm: #c0563a;
+  --color-muted: #8a7e6e;
+  --color-border: #d4cfc8;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 3rem;
+  --space-6: 5rem;
+  --container-max: 1200px;
+}
+
+/* 3. @theme block (Tailwind v4) */
+@theme {
+  --font-sans: var(--font-sans);
+  --font-serif: var(--font-serif);
+  --font-mono: var(--font-mono);
+  --color-bg: var(--color-bg);
+  --color-surface: var(--color-surface);
+  --color-accent-gold: var(--color-accent-gold);
+}
+
+/* 4. Base styles */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* 5. Motion verbs keyframes */
+@keyframes clip-reveal-up {
+  from {
+    clip-path: inset(100% 0 0 0);
+    opacity: 0;
+  }
+  to {
+    clip-path: inset(0 0 0 0);
+    opacity: 1;
+  }
+}
+
+.clip-reveal-up {
+  animation: clip-reveal-up 0.8s var(--ease-circ-out) both;
+}
+
+@keyframes razor-stroke {
+  from {
+    stroke-dashoffset: 1000;
+    opacity: 0;
+  }
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+}
+
+.razor-stroke {
+  stroke-dasharray: 1000;
+  animation: razor-stroke 1.5s var(--ease-circ-out) both;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-up {
+  animation: fade-up 0.8s var(--ease-circ-out) both;
+}
+
+.magnetic-hover {
+  transition: transform 0.3s var(--ease-circ-out);
+}
+
+.magnetic-hover:hover {
+  transform: scale(1.05);
+}
+
+/* 6. Section backgrounds */
+.section-dark {
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+.section-light {
+  background: var(--color-surface);
+  color: var(--color-text-on-dark);
+}
+
+/* 7. Container */
+.container-custom {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+}
+
+/* 8. Grid utilities */
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-5);
+}
+
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-4);
+}
+
+@media (max-width: 768px) {
+  .grid-2,
+  .grid-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* 9. prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
