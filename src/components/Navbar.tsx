@@ -1,89 +1,102 @@
+import { Link, useLocation } from 'react-router';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 
 const navLinks = [
-  { label: 'Início', href: '#inicio' },
-  { label: 'Serviços', href: '#servicos' },
-  { label: 'Galeria', href: '#galeria' },
-  { label: 'Sobre', href: '#sobre' },
-  { label: 'Contato', href: '#contato' },
+  { label: 'Início', href: '/' },
+  { label: 'Serviços', href: '/servicos' },
+  { label: 'Galeria', href: '/galeria' },
+  { label: 'Sobre', href: '/sobre' },
+  { label: 'Contato', href: '/contato' },
 ];
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
+  const { pathname } = useLocation();
 
-  const toggle = () => setOpen(!open);
+  const close = () => setOpen(false);
 
   return (
-    <header
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 100,
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        padding: '1.25rem 2rem',
-        mixBlendMode: 'difference',
-      }}
-    >
-      <a
-        href="#inicio"
-        style={{
-          fontFamily: 'var(--font-sans)',
-          fontWeight: 700,
-          fontSize: '0.875rem',
-          letterSpacing: '0.15em',
-          textTransform: 'uppercase',
-          color: '#f4ede0',
-          textDecoration: 'none',
-        }}
-      >
-        BARBEARIA
-      </a>
+    <header style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      zIndex: 100,
+      display: 'flex',
+      justifyContent: 'space-between',
+      alignItems: 'center',
+      padding: '1.25rem 2rem',
+      backdropFilter: 'blur(0px)',
+      transition: 'backdrop-filter 0.3s ease',
+    }}>
+      <Link to="/" onClick={close} style={{
+        fontFamily: 'var(--font-sans)',
+        fontWeight: 700,
+        fontSize: '0.875rem',
+        letterSpacing: '0.2em',
+        textTransform: 'uppercase',
+        color: '#f4ede0',
+        textDecoration: 'none',
+        position: 'relative',
+        zIndex: 110,
+      }}>
+        CACHORRO<span style={{ color: 'var(--color-accent-gold)' }}>.</span>
+      </Link>
 
       {/* Desktop links */}
-      <nav
-        style={{
-          display: 'flex',
-          gap: '2rem',
-          alignItems: 'center',
-        }}
-        className="hidden md:flex"
-      >
+      <nav className="hidden md:flex" style={{ display: 'flex', gap: '2.5rem', alignItems: 'center' }}>
         {navLinks.map((link) => (
-          <a
+          <Link
             key={link.href}
-            href={link.href}
+            to={link.href}
             style={{
               fontFamily: 'var(--font-sans)',
-              fontSize: '0.8125rem',
-              fontWeight: 400,
-              letterSpacing: '0.08em',
+              fontSize: '0.75rem',
+              fontWeight: pathname === link.href ? 700 : 400,
+              letterSpacing: '0.1em',
               textTransform: 'uppercase',
-              color: '#f4ede0',
+              color: pathname === link.href ? 'var(--color-accent-gold)' : '#f4ede0',
               textDecoration: 'none',
-              transition: 'opacity 0.3s',
+              position: 'relative',
+              transition: 'color 0.3s ease',
             }}
-            onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.6')}
-            onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+            onMouseEnter={(e) => {
+              if (pathname !== link.href) (e.currentTarget as HTMLElement).style.color = 'var(--color-accent-gold)';
+            }}
+            onMouseLeave={(e) => {
+              if (pathname !== link.href) (e.currentTarget as HTMLElement).style.color = '#f4ede0';
+            }}
           >
             {link.label}
-          </a>
+            {pathname === link.href && (
+              <motion.span
+                layoutId="nav-indicator"
+                style={{
+                  position: 'absolute',
+                  bottom: '-6px',
+                  left: 0,
+                  right: 0,
+                  height: 1,
+                  background: 'var(--color-accent-gold)',
+                }}
+                transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+              />
+            )}
+          </Link>
         ))}
       </nav>
 
-      {/* Hamburger button */}
+      {/* Hamburger */}
       <button
-        onClick={toggle}
+        onClick={() => setOpen(!open)}
         aria-label={open ? 'Fechar menu' : 'Abrir menu'}
         aria-expanded={open}
+        className="md:hidden"
         style={{
           position: 'relative',
-          width: 28,
-          height: 20,
+          width: 30,
+          height: 22,
           background: 'transparent',
           border: 'none',
           cursor: 'pointer',
@@ -93,43 +106,21 @@ export function Navbar() {
           justifyContent: 'space-between',
           padding: 0,
         }}
-        className="md:hidden"
       >
         <motion.span
-          animate={open ? { rotate: 45, y: 9 } : { rotate: 0, y: 0 }}
+          animate={open ? { rotate: 45, y: 10 } : { rotate: 0, y: 0 }}
           transition={{ duration: 0.3, ease: [0, 0, 0.2, 1] }}
-          style={{
-            display: 'block',
-            width: '100%',
-            height: 2,
-            backgroundColor: '#f4ede0',
-            borderRadius: 2,
-            transformOrigin: 'center',
-          }}
+          style={{ display: 'block', width: '100%', height: 2, backgroundColor: '#f4ede0', borderRadius: 1, transformOrigin: 'center' }}
         />
         <motion.span
           animate={open ? { opacity: 0, scaleX: 0 } : { opacity: 1, scaleX: 1 }}
           transition={{ duration: 0.2, ease: [0, 0, 0.2, 1] }}
-          style={{
-            display: 'block',
-            width: '100%',
-            height: 2,
-            backgroundColor: '#f4ede0',
-            borderRadius: 2,
-            transformOrigin: 'center',
-          }}
+          style={{ display: 'block', width: '100%', height: 2, backgroundColor: '#f4ede0', borderRadius: 1, transformOrigin: 'center' }}
         />
         <motion.span
-          animate={open ? { rotate: -45, y: -9 } : { rotate: 0, y: 0 }}
+          animate={open ? { rotate: -45, y: -10 } : { rotate: 0, y: 0 }}
           transition={{ duration: 0.3, ease: [0, 0, 0.2, 1] }}
-          style={{
-            display: 'block',
-            width: '100%',
-            height: 2,
-            backgroundColor: '#f4ede0',
-            borderRadius: 2,
-            transformOrigin: 'center',
-          }}
+          style={{ display: 'block', width: '100%', height: 2, backgroundColor: '#f4ede0', borderRadius: 1, transformOrigin: 'center' }}
         />
       </button>
 
@@ -140,41 +131,69 @@ export function Navbar() {
             initial={{ clipPath: 'inset(0 0 100% 0)' }}
             animate={{ clipPath: 'inset(0 0 0% 0)' }}
             exit={{ clipPath: 'inset(0 0 100% 0)' }}
-            transition={{ duration: 0.6, ease: [0, 0, 0.2, 1] }}
+            transition={{ duration: 0.7, ease: [0, 0, 0.2, 1] }}
             style={{
               position: 'fixed',
               inset: 0,
-              background: 'rgba(10, 9, 8, 0.96)',
+              background: 'rgba(10, 9, 8, 0.97)',
               zIndex: 100,
               display: 'flex',
               flexDirection: 'column',
-              alignItems: 'center',
+              alignItems: 'flex-start',
               justifyContent: 'center',
-              gap: '2rem',
-              backdropFilter: 'blur(8px)',
+              gap: '0.5rem',
+              padding: '6rem 4rem 4rem',
+              backdropFilter: 'blur(20px)',
             }}
           >
             {navLinks.map((link, i) => (
-              <motion.a
+              <Link
                 key={link.href}
-                href={link.href}
-                onClick={() => setOpen(false)}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.1 + i * 0.06, ease: [0, 0, 0.2, 1] }}
-                style={{
-                  fontFamily: 'var(--font-sans)',
-                  fontSize: 'clamp(2rem, 5vw, 3.5rem)',
-                  fontWeight: 600,
-                  color: '#f4ede0',
-                  textDecoration: 'none',
-                  letterSpacing: '-0.02em',
-                  lineHeight: 1,
-                }}
+                to={link.href}
+                onClick={close}
+                style={{ textDecoration: 'none' }}
               >
-                {link.label}
-              </motion.a>
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.5, delay: 0.05 + i * 0.05, ease: [0, 0, 0.2, 1] }}
+                  style={{
+                    fontFamily: "var(--font-serif)",
+                    fontSize: 'clamp(2.5rem, 6vw, 4.5rem)',
+                    fontWeight: 700,
+                    fontStyle: 'italic',
+                    color: pathname === link.href ? 'var(--color-accent-gold)' : '#f4ede0',
+                    lineHeight: 1.05,
+                    letterSpacing: '-0.02em',
+                    transition: 'color 0.3s ease',
+                  }}
+                  onMouseEnter={(e) => {
+                    if (pathname !== link.href) (e.currentTarget as HTMLElement).style.color = 'var(--color-accent-gold)';
+                  }}
+                  onMouseLeave={(e) => {
+                    if (pathname !== link.href) (e.currentTarget as HTMLElement).style.color = '#f4ede0';
+                  }}
+                >
+                  {link.label}
+                </motion.div>
+              </Link>
             ))}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.6, duration: 0.6 }}
+              style={{
+                position: 'absolute',
+                bottom: '3rem',
+                left: '4rem',
+                fontFamily: 'var(--font-mono)',
+                fontSize: 'var(--text-label)',
+                color: 'var(--color-muted)',
+                letterSpacing: '0.1em',
+              }}
+            >
+              BARBEARIA ARTESANAL — EST. 2018
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

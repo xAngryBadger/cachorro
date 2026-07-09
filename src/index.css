@@ -1,8 +1,8 @@
 /* ============================================
-   BARBEARIA — Cachorro
-   Personalidade: Luxo-artesanal, masculino, quente
-   Fonts: Outfit + Fraunces + JetBrains Mono
-   Easing: --ease-circ-out = cubic-bezier(0, 0, 0.2, 1)
+   BARBEARIA — CACHORRO
+   Retro-brutalist, masculine, cinematic
+   Fonts: Outfit + Fraunces (italic drama) + JetBrains Mono
+   Palette: charcoal #1a1614 / cream #f4ede0 / gold #c9a23f / terracotta #c0563a
    ============================================ */
 
 /* 1. @fontsource imports */
@@ -10,6 +10,8 @@
 @import "@fontsource/outfit/400.css";
 @import "@fontsource/outfit/600.css";
 @import "@fontsource/outfit/700.css";
+@import "@fontsource/fraunces/400.css";
+@import "@fontsource/fraunces/400-italic.css";
 @import "@fontsource/fraunces/700.css";
 @import "@fontsource/fraunces/700-italic.css";
 @import "@fontsource/jetbrains-mono/400.css";
@@ -18,27 +20,33 @@
 /* 2. :root tokens */
 :root {
   --ease-circ-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-project: var(--ease-circ-out);
+  --ease-expo: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-spring-soft: cubic-bezier(0.25, 0.46, 0.45, 0.94);
 
   --font-sans: 'Outfit', sans-serif;
   --font-serif: 'Fraunces', serif;
   --font-mono: 'JetBrains Mono', monospace;
 
-  --text-h1: clamp(3rem, 5vw, 5.5rem);
-  --text-h2: clamp(2rem, 3.5vw, 3.5rem);
-  --text-h3: clamp(1.375rem, 2vw, 2rem);
-  --text-body: clamp(1.0625rem, 1.2vw, 1.1875rem);
-  --text-label: 0.75rem;
-  --text-eyebrow: 0.6875rem;
+  --text-h1: clamp(3.5rem, 7vw, 8rem);
+  --text-h2: clamp(2.5rem, 5vw, 5rem);
+  --text-h3: clamp(1.5rem, 2.5vw, 2.5rem);
+  --text-body: clamp(1.0625rem, 1.2vw, 1.25rem);
+  --text-label: 0.6875rem;
+  --text-eyebrow: 0.625rem;
 
   --color-bg: #1a1614;
+  --color-bg-deep: #0f0d0b;
   --color-surface: #f4ede0;
+  --color-surface-warm: #ebe3d2;
   --color-text: #f4ede0;
   --color-text-on-dark: #1a1614;
   --color-accent-gold: #c9a23f;
+  --color-accent-gold-light: #e8d5a3;
   --color-accent-warm: #c0563a;
   --color-muted: #8a7e6e;
+  --color-muted-light: #6b5f4f;
   --color-border: #d4cfc8;
+  --color-border-subtle: rgba(201, 162, 63, 0.15);
 
   --space-1: 0.5rem;
   --space-2: 1rem;
@@ -46,6 +54,7 @@
   --space-4: 2rem;
   --space-5: 3rem;
   --space-6: 5rem;
+  --space-7: 8rem;
   --container-max: 1200px;
 }
 
@@ -57,6 +66,7 @@
   --color-bg: var(--color-bg);
   --color-surface: var(--color-surface);
   --color-accent-gold: var(--color-accent-gold);
+  --color-accent-warm: var(--color-accent-warm);
 }
 
 /* 4. Base styles */
@@ -68,6 +78,8 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 body {
@@ -78,7 +90,209 @@ body {
   overflow-x: hidden;
 }
 
-/* 5. Motion verbs keyframes */
+::selection {
+  background: var(--color-accent-gold);
+  color: var(--color-bg);
+}
+
+/* 5. Noise/grain overlay utility */
+.noise-overlay {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.05;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+.noise-overlay-light {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* 6. Section background utilities */
+.section-dark {
+  background: var(--color-bg);
+  color: var(--color-text);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-dark-deep {
+  background: var(--color-bg-deep);
+  color: var(--color-text);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-light {
+  background: var(--color-surface);
+  color: var(--color-text-on-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+.section-warm {
+  background: var(--color-surface-warm);
+  color: var(--color-text-on-dark);
+  position: relative;
+  overflow: hidden;
+}
+
+/* 7. Diagonal clip-path section transitions */
+.clip-diagonal-bottom {
+  clip-path: polygon(0 0, 100% 0, 100% 85%, 0 100%);
+}
+
+.clip-diagonal-bottom-reverse {
+  clip-path: polygon(0 0, 100% 6%, 100% 100%, 0 94%);
+}
+
+.clip-diagonal-top {
+  clip-path: polygon(0 8%, 100% 0, 100% 100%, 0 100%);
+}
+
+.clip-diagonal-top-reverse {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0 92%);
+}
+
+.clip-diagonal-steep {
+  clip-path: polygon(0 0, 100% 5%, 100% 100%, 0 95%);
+}
+
+.clip-diagonal-subtle {
+  clip-path: polygon(0 0, 100% 3%, 100% 100%, 0 97%);
+}
+
+.clip-diagonal-slash {
+  clip-path: polygon(0 0, 100% 0, 100% 88%, 0 100%);
+}
+
+/* 8. Container */
+.container-custom {
+  max-width: var(--container-max);
+  margin-inline: auto;
+  padding-inline: var(--space-4);
+  position: relative;
+  z-index: 2;
+}
+
+/* 9. Typography helpers */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-eyebrow);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--color-accent-gold);
+  line-height: 1;
+  margin-bottom: 0.75rem;
+}
+
+.eyebrow-warm {
+  color: var(--color-accent-warm);
+}
+
+.headline-serif {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-style: italic;
+  font-size: var(--text-h2);
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+.headline-hero {
+  font-family: var(--font-serif);
+  font-weight: 700;
+  font-style: italic;
+  font-size: var(--text-h1);
+  line-height: 0.95;
+  letter-spacing: -0.03em;
+}
+
+.label-mono {
+  font-family: var(--font-mono);
+  font-size: var(--text-label);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* 10. Gold shimmer CTA */
+.btn-gold {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-bg);
+  background: linear-gradient(
+    120deg,
+    var(--color-accent-gold) 0%,
+    var(--color-accent-gold-light) 40%,
+    var(--color-accent-gold) 60%,
+    #d4af5e 100%
+  );
+  background-size: 250% 100%;
+  padding: 1rem 2.5rem;
+  border: none;
+  cursor: pointer;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: background-position 0.6s var(--ease-circ-out), transform 0.3s var(--ease-circ-out);
+}
+
+.btn-gold:hover {
+  background-position: 100% 0;
+  transform: translateY(-2px);
+}
+
+.btn-gold::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transition: left 0.6s var(--ease-expo);
+}
+
+.btn-gold:hover::after {
+  left: 100%;
+}
+
+.btn-outline {
+  display: inline-block;
+  font-family: var(--font-sans);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-accent-gold);
+  background: transparent;
+  border: 1px solid var(--color-accent-gold);
+  padding: 0.875rem 2.25rem;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.3s var(--ease-circ-out);
+}
+
+.btn-outline:hover {
+  background: var(--color-accent-gold);
+  color: var(--color-bg);
+}
+
+/* 11. Motion keyframes */
 @keyframes clip-reveal-up {
   from {
     clip-path: inset(100% 0 0 0);
@@ -91,7 +305,7 @@ body {
 }
 
 .clip-reveal-up {
-  animation: clip-reveal-up 0.8s var(--ease-circ-out) both;
+  animation: clip-reveal-up 0.9s var(--ease-circ-out) both;
 }
 
 @keyframes razor-stroke {
@@ -107,13 +321,13 @@ body {
 
 .razor-stroke {
   stroke-dasharray: 1000;
-  animation: razor-stroke 1.5s var(--ease-circ-out) both;
+  animation: razor-stroke 1.8s var(--ease-circ-out) both;
 }
 
 @keyframes fade-up {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(40px);
   }
   to {
     opacity: 1;
@@ -125,57 +339,127 @@ body {
   animation: fade-up 0.8s var(--ease-circ-out) both;
 }
 
+@keyframes shimmer-sweep {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    var(--color-accent-gold) 0%,
+    var(--color-accent-gold-light) 50%,
+    var(--color-accent-gold) 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer-sweep 3s linear infinite;
+}
+
+@keyframes grain-drift {
+  0%, 100% { transform: translate(0, 0); }
+  10% { transform: translate(-1%, -1%); }
+  30% { transform: translate(1%, 0.5%); }
+  50% { transform: translate(-0.5%, 1%); }
+  70% { transform: translate(0.5%, -0.5%); }
+  90% { transform: translate(0.5%, 0.5%); }
+}
+
+.animated-grain {
+  animation: grain-drift 8s steps(10) infinite;
+}
+
 .magnetic-hover {
-  transition: transform 0.3s var(--ease-circ-out);
+  transition: transform 0.4s var(--ease-circ-out);
+  display: inline-block;
 }
 
 .magnetic-hover:hover {
-  transform: scale(1.05);
+  transform: scale(1.04) translateY(-2px);
 }
 
-/* 6. Section backgrounds */
-.section-dark {
-  background: var(--color-bg);
-  color: var(--color-text);
-}
-
-.section-light {
-  background: var(--color-surface);
-  color: var(--color-text-on-dark);
-}
-
-/* 7. Container */
-.container-custom {
-  max-width: var(--container-max);
-  margin-inline: auto;
-  padding-inline: var(--space-4);
-}
-
-/* 8. Grid utilities */
+/* 12. Grid utilities */
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
+  gap: var(--space-6);
+}
+
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
   gap: var(--space-5);
 }
 
-.grid-4 {
+.grid-asymmetric {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: var(--space-4);
+  grid-template-columns: 1.2fr 1fr;
+  gap: var(--space-6);
 }
 
 @media (max-width: 768px) {
-  .grid-2,
-  .grid-4 {
+  .grid-2, .grid-3, .grid-asymmetric {
     grid-template-columns: 1fr;
+    gap: var(--space-4);
   }
 }
 
-/* 9. prefers-reduced-motion */
+/* 13. Razor blade SVG divider */
+.razor-divider {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  height: 80px;
+}
+
+.razor-divider svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* 14. Overflow accent — text spilling out */
+.overflow-accent {
+  position: relative;
+}
+.overflow-accent::before {
+  content: '';
+  position: absolute;
+  top: -2rem;
+  left: -4%;
+  width: 108%;
+  height: calc(100% + 4rem);
+  background: rgba(201, 162, 63, 0.03);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* 15. Horizontal rule — gold line */
+.gold-line {
+  width: 60px;
+  height: 2px;
+  background: var(--color-accent-gold);
+  border: none;
+}
+
+.gold-line-full {
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(to right, transparent, var(--color-accent-gold), transparent);
+  border: none;
+  opacity: 0.3;
+}
+
+/* 16. Section wrapper with diagonal cut */
+.section-wrapper {
+  position: relative;
+}
+
+/* 17. prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+  html { scroll-behavior: auto; }
 }
